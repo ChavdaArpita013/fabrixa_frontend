@@ -1,0 +1,157 @@
+.techPack-table-container {
+  width: 100%;
+  overflow-x: auto;
+  padding: 24px;
+}
+
+.techPack-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin-bottom: 20px;
+}
+
+.techPack-table th,
+.techPack-table td {
+  padding: 10px;
+  text-align: left;
+}
+
+.techPack-table th {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Expanded row */
+.expanded-row {
+  background-color: #e5e7eba3 !important;
+}
+
+.expanded-content {
+  padding: 10px !important;
+  border-top: 1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+  animation: slide-in 0.3s ease-in-out !important;
+}
+
+@keyframes slide-in {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  }
+}
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* Space between buttons */
+}
+
+.copy-button,
+.edit-button,
+.download-button {
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid black;
+}
+
+.no-comment-icon {
+  font-size: 18px;
+  color: #888; /* Adjust color as needed */
+}
+
+.techPack-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.techPack-table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+
+/* .techPack-table tbody tr:hover {
+      background-color: white;
+    } */
+
+.pagination {
+  margin-top: 21px;
+  text-align: center;
+  display: flex;
+  gap: 28px;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.pagination-btn {
+  background-color: black;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.pagination-btn:hover {
+  background-color: black;
+}
+
+.pagination-btn:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.page-numbers {
+  list-style-type: none;
+  padding: 0;
+}
+
+.page-numbers li {
+  display: inline;
+  margin: 0px 7px;
+  font-size: 18px;
+}
+
+.page-numbers button {
+  background-color: #ffffff;
+  padding: 5px 5px;
+  height: 100%;
+  cursor: pointer;
+}
+
+.page-numbers button.active {
+  color: #868686;
+  font-size: 18px;
+}
+
+.datatable-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.total-items-indicator {
+  white-space: nowrap;
+}
+
+.search-bar {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 50%;
+  min-width: 300px;
+}
+
+.search-bar:focus {
+  outline: none;
+  border-color: black;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
