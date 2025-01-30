@@ -21,7 +21,7 @@ const Navbar = ({ isSignedIn }) => {
         <nav className="bg-gray-100 p-4 shadow-md sticky top-0 z-50">
             {isSignedIn ? (
                 <div className="flex justify-between items-center">
-                    <a href='/'><h1 className="text-2xl font-bold text-blue-500">Fashion Framework</h1></a>
+                    <a href='/'><h1 className="text-2xl font-bold text-blue-500"><img className='h-14 w-44 mix-blend-multiply' src='/logo512.png'/></h1></a>
                     <div className="flex gap-4">
                         <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" onClick={handleWorkButtonClick}>
                             My Work

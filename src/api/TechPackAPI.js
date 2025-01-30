@@ -35,4 +35,15 @@ const fetchAllTechPacksByUser = async () => {
     }
 }
 
-export { createNewTechPack , fetchAllTechPacksByUser };
+const deleteTechPackById = (techpackId) =>{
+    try {
+        const response = axios.delete(`http://localhost:8090/work/delete-teckpack/${techpackId}`);
+        console.log("deleted Successfully " , response.data);
+        
+    } catch (error) {
+        console.log(`Error deleted techpack: ${techpackId}`);
+        
+    }
+}
+
+export { createNewTechPack , fetchAllTechPacksByUser ,deleteTechPackById};

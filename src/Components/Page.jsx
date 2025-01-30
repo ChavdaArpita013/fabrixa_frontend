@@ -4,14 +4,12 @@ import { MdAddCircleOutline, MdOutlineDeleteOutline } from "react-icons/md";
 import { Rnd } from "react-rnd";
 import { createNewTechPack } from "../api/TechPackAPI";
 import Cookies from 'js-cookie';
+import { generatePdf } from "../utils/pdfGenerate";
 
 const Page = () => {
     const [pages, setPages] = useState([{ id: 1, items: [], height: 890, width: 1150 }]);
     console.log("page:", pages);
-
-
     const [activeItemId, setActiveItemId] = useState(null);
-
     const [activePage, setActivePage] = useState(1); // Track the active page
     const pageRefs = useRef({}); // To store references for each page
     const createdBy = Cookies.get('name');
@@ -233,6 +231,11 @@ const Page = () => {
 
     }
 
+    const handleDownloadButtonClick = async () => {
+        await generatePdf(pages);
+        console.log("PDF Generated successfully!");
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 p-4">
             <button
@@ -241,7 +244,7 @@ const Page = () => {
             >
                 Save Tech Pack
             </button>
-            <button className="h-10 w-40 bg-blue-500 sticky rounded text-white mb-4">
+            <button className="h-10 w-40 bg-blue-500 sticky rounded text-white mb-4" onClick={handleDownloadButtonClick}>
                 Download
             </button>
             <div className="flex flex-wrap justify-center gap-8">

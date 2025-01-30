@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { MdDelete, MdDownload, MdEdit, MdOutlineHideImage } from 'react-icons/md';
-import { fetchAllTechPacksByUser } from '../api/TechPackAPI';
+import { deleteTechPackById, fetchAllTechPacksByUser } from '../api/TechPackAPI';
 
 const WorkDataTable = () => {
     const [data, setData] = useState([]);
@@ -22,6 +22,12 @@ const WorkDataTable = () => {
         fetchData();
     }, []); // Empty dependency array ensures this runs only once
 
+    const handleDeleteButtonClick =async (techpackId) => {
+        const deletetechPack =await deleteTechPackById(techpackId);
+        if(deletetechPack){
+            alert("deleted")
+        }
+    }
 
 
     return (
@@ -66,7 +72,7 @@ const WorkDataTable = () => {
                                     <td className="px-6 py-4">{"Not Edited"}</td>
                                     <td className="px-6 py-4 flex items-center">
                                         <button><MdEdit /></button>
-                                        <button className='ml-4'><MdDelete /></button>
+                                        <button className='ml-4' onClick={() => handleDeleteButtonClick(item.techPackId)}><MdDelete /></button>
                                         {/* <button className='ml-4'><MdOutlineHideImage /></button> */}
                                     </td>
                                     <td>
