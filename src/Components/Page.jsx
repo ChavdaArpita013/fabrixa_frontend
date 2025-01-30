@@ -88,7 +88,7 @@ const Page = () => {
         drop: (item, monitor) => {
             const offset = monitor.getSourceClientOffset();
             if (offset) {
-                const targetPageRef = pageRefs.current[activePage];
+                const targetPageRef = pageRefs.current[activePage]; // Use activePage reference
                 if (targetPageRef) {
                     const rect = targetPageRef.getBoundingClientRect();
                     let newItem;
@@ -112,12 +112,11 @@ const Page = () => {
                                 type: "image",
                                 x: offset.x - rect.left,
                                 y: offset.y - rect.top,
-                                width: 150, // Default width for image placeholder
-                                height: 150, // Default height for image placeholder
-                                src: "", // Placeholder for image source
+                                width: 150,
+                                height: 150,
+                                src: "",
                             };
                             break;
-
 
                         case "line-horizontal":
                             newItem = {
@@ -125,8 +124,8 @@ const Page = () => {
                                 type: "line-horizontal",
                                 x: offset.x - rect.left,
                                 y: offset.y - rect.top,
-                                width: 300, // Default width
-                                height: 2, // Thin line
+                                width: 300,
+                                height: 2,
                             };
                             break;
 
@@ -136,21 +135,10 @@ const Page = () => {
                                 type: "line-vertical",
                                 x: offset.x - rect.left,
                                 y: offset.y - rect.top,
-                                width: 2, // Thin line
-                                height: 300, // Default height
+                                width: 2,
+                                height: 300,
                             };
                             break;
-
-                        // case "table":
-                        //     newItem = {
-                        //         id: Date.now(),
-                        //         type: "table",
-                        //         x: offset.x - rect.left,
-                        //         y: offset.y - rect.top,
-                        //         rows: 3, // Default rows
-                        //         columns: 3, // Default columns
-                        //     };
-                        //     break;
 
                         default:
                             break;
@@ -247,160 +235,123 @@ const Page = () => {
             <button className="h-10 w-40 bg-blue-500 sticky rounded text-white mb-4" onClick={handleDownloadButtonClick}>
                 Download
             </button>
+            {/* page container */}
             <div className="flex flex-wrap justify-center gap-8">
-                {pages.map((page) => (
-                    <div
-                        key={page.id}
-                        data-page-id={page.id}
-                        ref={(el) => (pageRefs.current[page.id] = el)}
-                        onClick={() => setActivePage(page.id)}
-                        className={`relative border bg-white shadow-lg ${activePage === page.id
-                            ? "border-blue-500"
-                            : "border-gray-300"
-                            }`}
-                        style={{
-                            width: "100%",
-                            maxWidth: "1150px",
-                            cursor: "pointer",
-                        }}
-                    >
+                {pages.map((page) => {
+
+
+                    return (
                         <div
-                            ref={activePage === page.id ? drop : null}
-                            className="relative w-full h-full bg-white"
+                            key={page.id}
+                            data-page-id={page.id}
+                            ref={(el) => (pageRefs.current[page.id] = el)}
+                            onClick={() => setActivePage(page.id)}
+                            className={`relative border bg-white shadow-lg ${activePage === page.id ? "border-blue-500" : "border-gray-300"}`}
                             style={{
-                                height: `${page.height}px`,
-                                width: `${page.width}px`,
+                                width: "100%",
+                                maxWidth: "1150px",
+                                cursor: "pointer",
                             }}
                         >
-                            {page.items.map((item) => (
-                                <Rnd
-                                    key={item.id}
-                                    size={{
-                                        width: item.type === "line-vertical" ? 1 : item.width,
-                                        height: item.type === "line-horizontal" ? 1 : item.height,
-                                    }}
-                                    position={{ x: item.x, y: item.y }}
-                                    onDragStop={(e, data) =>
-                                        handleResize(
-                                            page.id,
-                                            item.id,
-                                            {
-                                                width: item.width,
-                                                height: item.height,
-                                            },
-                                            data
-                                        )
-                                    }
-                                    onResizeStop={(e, direction, ref, delta, position) => {
-                                        const updatedDimensions = {
-                                            width:
-                                                item.type === "line-vertical"
-                                                    ? 1
-                                                    : ref.offsetWidth,
-                                            height:
-                                                item.type === "line-horizontal"
-                                                    ? 1
-                                                    : ref.offsetHeight,
-                                        };
+                            <div
+                                ref={drop}
+                                className={`relative w-full h-full bg-white ${isOver ? "bg-blue-100" : ""}`}
+                                style={{
+                                    height: `${page.height}px`,
+                                    width: `${page.width}px`,
+                                }}
+                            >
+                                {page.items.map((item) => (
+                                    <Rnd
+                                        key={item.id}
+                                        size={{
+                                            width: item.type === "line-vertical" ? 1 : item.width,
+                                            height: item.type === "line-horizontal" ? 1 : item.height,
+                                        }}
+                                        position={{ x: item.x, y: item.y }}
+                                        onDragStop={(e, data) =>
+                                            handleResize(
+                                                page.id,
+                                                item.id,
+                                                {
+                                                    width: item.width,
+                                                    height: item.height,
+                                                },
+                                                data
+                                            )
+                                        }
+                                        onResizeStop={(e, direction, ref, delta, position) => {
+                                            const updatedDimensions = {
+                                                width: item.type === "line-vertical" ? 1 : ref.offsetWidth,
+                                                height: item.type === "line-horizontal" ? 1 : ref.offsetHeight,
+                                            };
 
-                                        handleResize(page.id, item.id, updatedDimensions, position);
-                                    }}
-                                    bounds="parent"
-                                    className={`absolute border ${activeItemId === item.id
-                                        ? "border-black"
-                                        : "border-transparent"
-                                        }`}
-                                    onMouseEnter={() => setActiveItemId(item.id)}
-                                    onMouseLeave={() => setActiveItemId(null)}
-                                    onClick={() => setActiveItemId(item.id)}
-                                >
-                                    <div className="relative group w-full h-full">
-                                        {item.type === "text" ? (
-                                            <div
-                                                contentEditable
-                                                className="w-full h-full"
-                                                data-item-id={item.id}
-                                                onBlur={(e) => {
-                                                    const updatedContent =
-                                                        e.target.textContent;
-                                                    handleTextUpdate(
-                                                        page.id,
-                                                        item.id,
-                                                        updatedContent
-                                                    );
-                                                }}
+                                            handleResize(page.id, item.id, updatedDimensions, position);
+                                        }}
+                                        bounds="parent"
+                                        className={`absolute border ${activeItemId === item.id ? "border-black" : "border-transparent"}`}
+                                        onMouseEnter={() => setActiveItemId(item.id)}
+                                        onMouseLeave={() => setActiveItemId(null)}
+                                        onClick={() => setActiveItemId(item.id)}
+                                    >
+                                        <div className="relative group w-full h-full">
+                                            {item.type === "text" ? (
+                                                <div
+                                                    contentEditable
+                                                    className="w-full h-full"
+                                                    data-item-id={item.id}
+                                                    onBlur={(e) => {
+                                                        const updatedContent = e.target.textContent;
+                                                        handleTextUpdate(page.id, item.id, updatedContent);
+                                                    }}
+                                                >
+                                                    {item.content || "Editable Text"}
+                                                </div>
+                                            ) : item.type === "image" ? (
+                                                <div className="w-full h-full flex items-center justify-center border border-gray-300">
+                                                    {item.src ? (
+                                                        <img src={item.src} alt="Uploaded" className="w-full h-full" />
+                                                    ) : (
+                                                        <div>
+                                                            <button
+                                                                onClick={() =>
+                                                                    document.getElementById(`upload-${item.id}`).click()
+                                                                }
+                                                                className="text-blue-500"
+                                                            >
+                                                                Upload Image
+                                                            </button>
+                                                            <input
+                                                                id={`upload-${item.id}`}
+                                                                type="file"
+                                                                className="hidden"
+                                                                onChange={(e) =>
+                                                                    handleUploadImage(page.id, item.id, e.target.files[0])
+                                                                }
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : item.type === "line-horizontal" ? (
+                                                <div className="bg-black" style={{ width: `${item.width}px`, height: "1px" }}></div>
+                                            ) : item.type === "line-vertical" ? (
+                                                <div className="bg-black" style={{ width: "1px", height: `${item.height}px` }}></div>
+                                            ) : null}
+                                            <button
+                                                onClick={() => handleDeleteItem(page.id, item.id)}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100"
                                             >
-                                                {item.content || "Editable Text"}
-                                            </div>
-                                        ) : item.type === "image" ? (
-                                            <div className="w-full h-full flex items-center justify-center border border-gray-300">
-                                                {item.src ? (
-                                                    <img
-                                                        src={item.src}
-                                                        alt="Uploaded"
-                                                        className="w-full h-full"
-                                                    />
-                                                ) : (
-                                                    <div>
-                                                        <button
-                                                            onClick={() =>
-                                                                document
-                                                                    .getElementById(
-                                                                        `upload-${item.id}`
-                                                                    )
-                                                                    .click()
-                                                            }
-                                                            className="text-blue-500"
-                                                        >
-                                                            Upload Image
-                                                        </button>
-                                                        <input
-                                                            id={`upload-${item.id}`}
-                                                            type="file"
-                                                            className="hidden"
-                                                            onChange={(e) =>
-                                                                handleUploadImage(
-                                                                    page.id,
-                                                                    item.id,
-                                                                    e.target.files[0]
-                                                                )
-                                                            }
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ) : item.type === "line-horizontal" ? (
-                                            <div
-                                                className="bg-black"
-                                                style={{
-                                                    width: `${item.width}px`,
-                                                    height: "1px",
-                                                }}
-                                            ></div>
-                                        ) : item.type === "line-vertical" ? (
-                                            <div
-                                                className="bg-black"
-                                                style={{
-                                                    width: "1px",
-                                                    height: `${item.height}px`,
-                                                }}
-                                            ></div>
-                                        ) : null}
-                                        <button
-                                            onClick={() =>
-                                                handleDeleteItem(page.id, item.id)
-                                            }
-                                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100"
-                                        >
-                                            <MdOutlineDeleteOutline />
-                                        </button>
-                                    </div>
-                                </Rnd>
-                            ))}
+                                                <MdOutlineDeleteOutline />
+                                            </button>
+                                        </div>
+                                    </Rnd>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
+
             <div className="flex justify-center mt-4">
                 <button
                     onClick={handleAddPage}
