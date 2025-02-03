@@ -13,31 +13,6 @@ const Page = () => {
     const [activePage, setActivePage] = useState(1); // Track the active page
     const pageRefs = useRef({}); // To store references for each page
     const createdBy = Cookies.get('name');
-    // Function to prepare techPackData
-    const prepareTechPackData = () => {
-        return pages.map((page) => ({
-            id: page.id,
-            height: page.height,
-            width: page.width,
-            items: page.items.map((item) => {
-                const content = item.type === "text"
-                    ? document.querySelector(`[data-item-id="${item.id}"]`)?.innerText || "Editable Text"
-                    : undefined;
-
-                return {
-                    id: item.id,
-                    type: item.type,
-                    x: item.x,
-                    y: item.y,
-                    width: item.width,
-                    height: item.height,
-                    ...(item.type === "table" ? { rows: item.rows, columns: item.columns } : {}),
-                    ...(item.type === "text" ? { content } : {}),
-                    ...(item.src ? { src: item.src } : {}),
-                };
-            }),
-        }));
-    };
 
     // Handles resizing and repositioning of items
     const handleResize = (pageId, itemId, newSize, position) => {
@@ -56,8 +31,10 @@ const Page = () => {
     };
 
     const handleAddPage = () => {
-        const newPage = { id: pages.length + 1, items: [], height: 890, width: 1150 };
-        setPages([...pages, newPage]);
+        const newPageId = pages.length + 1;
+        const newPage = { id: newPageId, items: [], height: 890, width: 1150 };
+        setPages(prev => [...prev, newPage]);
+        setActivePage(newPageId); // Critical fix
     };
 
     const handleDeletePage = (id) => {
@@ -88,6 +65,8 @@ const Page = () => {
         drop: (item, monitor) => {
             const offset = monitor.getSourceClientOffset();
             if (offset) {
+                console.log("i am active !!!", activePage);
+
                 const targetPageRef = pageRefs.current[activePage]; // Use activePage reference
                 if (targetPageRef) {
                     const rect = targetPageRef.getBoundingClientRect();
@@ -243,19 +222,21 @@ const Page = () => {
                     return (
                         <div
                             key={page.id}
+                            isActive={activePage === page.id}
+                            onActivate={() => setActivePage(page.id)}
                             data-page-id={page.id}
                             ref={(el) => (pageRefs.current[page.id] = el)}
                             onClick={() => setActivePage(page.id)}
-                            className={`relative border bg-white shadow-lg ${activePage === page.id ? "border-blue-500" : "border-gray-300"}`}
+                            className={`relative border  shadow-lg ${activePage === page.id ? "border-blue-500" : "border-gray-300"}`}
                             style={{
-                                width: "100%",
-                                maxWidth: "1150px",
+                                height: `${page.height}px`,
+                                width: `${page.width}px`,
                                 cursor: "pointer",
                             }}
                         >
                             <div
                                 ref={drop}
-                                className={`relative w-full h-full bg-white ${isOver ? "bg-blue-100" : ""}`}
+                                className={`relative w-full h-full  ${isOver ? "bg-blue-100" : ""}`}
                                 style={{
                                     height: `${page.height}px`,
                                     width: `${page.width}px`,

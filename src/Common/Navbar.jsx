@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import TechPackNamePopUp from '../Components/TechPackNamePopUp';
+import { CiUser } from 'react-icons/ci';
 
 const Navbar = ({ isSignedIn }) => {
     const [showPopup, setShowPopup] = useState(false);
@@ -18,7 +19,7 @@ const Navbar = ({ isSignedIn }) => {
     }
 
     return (
-        <nav className="bg-gray-100 p-4 shadow-md sticky top-0 z-50">
+        <nav className="bg-gray-100 p-1 pr-5 shadow-md sticky top-0 z-50">
             {isSignedIn ? (
                 <div className="flex justify-between items-center">
                     <a href='/'><h1 className="text-2xl font-bold text-blue-500"><img className='h-14 w-44 mix-blend-multiply' src='/logo512.png'/></h1></a>
@@ -32,6 +33,7 @@ const Navbar = ({ isSignedIn }) => {
                         >
                             + New
                         </button>
+                        <button><CiUser className='h-7 w-7'/></button>
                     </div>
                 </div>
             ) : (
